@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+	<ui:composition template="/template.xhtml">
+		<ui:define name="content">
+			<input type="hidden" name="activeMenu" id="activeMenu" value="medico" />
+			<script type="text/javascript">
+				PrimeFaces.locales['pt'] = {
+			        closeText: 'kapat',
+			        prevText: 'geri',
+			        nextText: 'ileri',
+			        currentText: 'Hoje',
+			        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+			            'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+			        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun',
+			            'Jul','Ago','Set','Out','Nov','Dez'],
+			        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sabado'],
+			        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sab'],
+			        dayNamesMin: ['D','S','T','Q','Q','S','S'],
+			        weekHeader: 'Hf',
+			        firstDay: 0,
+			        yearSuffix: '',
+			        month: 'Mês',
+			        week: 'Semana',
+			        day: 'Dia',
+			        allDayText : 'Dia inteiro'
+			    };
+			</script>
+			<div class="col-md-9">
+				<h2 class="page-header">Agenda - <h:outputText value="#{agendaController.medico.pessoa.nome}"/> </h2>
+			</div>
+	
+			<h:form>
+				<div class="col-md-9">
+					<p:schedule value="#{agendaController.agenda}" locale="pt" widgetVar="agenda" id="agenda" timeZone="GMT-2" clientTimeZone="GMT-3"
+								resizable="false" draggable="false">
+						<p:ajax event="dateSelect" listener="#{agendaController.onDateSelect}" update="consultaDialog" oncomplete="PF('consultaDialog').show();"/>
+					
+					</p:schedule>
+				</div>
+				<p:dialog widgetVar="consultaDialog" id="consultaDialog" header="Agendamento de consulta" modal="true"
+							width="900px">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Paciente *</label>
+							<div style="width: 85%;" >
+                 				<p:autoComplete style="width: 85%;" maxResults="15" inputStyle="width: 85%;" 
+                 								completeMethod="#{pacienteController.pacientesAutoComplete}"  
+                 								value="#{agendaController.paciente}"
+                 								var="paciente"
+                 								itemLabel="#{paciente.pessoa.nome}"
+                 								itemValue="#{paciente}"
+                 								converter="pacienteConverter"
+                 								forceSelection="true"
+                 								required="false"
+                 								requiredMessage="O campo Paciente é de preenchimento obrigatório."
+                 								/>
+                 				<p:commandButton value="+" onclick="PF('cadastroPaciente').show();" />
+                 			</div>
+						</div>
+					</div>
+					
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Data/Hora *</label>
+							<div style="width: 85%;" >
+                 				<p:calendar value="#{agendaController.event.startDate}" pattern="dd/MM/yyyy HH:mm"/>
+                 			</div>
+						</div>
+					</div>
+					
+					<div class="col-md-6">
+						<div class="form-group">
+							<p:commandButton type="reset" value="Reset" />
+		            		<p:commandButton id="addButton" value="Salvar" actionListener="#{agendaController.addEvent}" oncomplete="PF('agenda').update();PF('consultaDialog').hide();" />
+						</div>
+					</div>
+				</p:dialog>
+				
+				<p:dialog header="Cadastro de paciente" modal="true" widgetVar="cadastroPaciente">
+					<p:panelGrid>
+						Cadastro de novo paciente
+					</p:panelGrid>
+				</p:dialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</html>
