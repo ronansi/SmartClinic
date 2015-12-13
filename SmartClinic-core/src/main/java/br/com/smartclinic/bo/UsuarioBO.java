@@ -40,7 +40,7 @@ public class UsuarioBO implements Serializable{
 	 * @return
 	 * @throws RegraNegocioException 
 	 */
-	private void validaRegrasNegocioInserir(Usuario usuario) throws RegraNegocioException {
+	public void validaRegrasNegocioInserir(Usuario usuario) throws RegraNegocioException {
 		Usuario usuarioTemp;
 		List<Usuario> listTemp;
 		List<String> mensagens = new ArrayList<String>();

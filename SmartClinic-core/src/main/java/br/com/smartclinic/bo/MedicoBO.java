@@ -40,7 +40,7 @@ public class MedicoBO implements Serializable{
 	 * @return
 	 * @throws RegraNegocioException 
 	 */
-	private void validaRegrasNegocioMedicoInserir(Medico medico)
+	public void validaRegrasNegocioMedicoInserir(Medico medico)
 			throws RegraNegocioException {
 		Medico medicoTemp;
 		List<Medico> listMedicosTemp;
