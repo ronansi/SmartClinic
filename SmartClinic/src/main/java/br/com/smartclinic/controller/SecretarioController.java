@@ -4,15 +4,16 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 import org.primefaces.event.FlowEvent;
 
 import br.com.smartclinic.RegraNegocioException;
 import br.com.smartclinic.model.Endereco;
-import br.com.smartclinic.model.Medico;
 import br.com.smartclinic.model.Pessoa;
 import br.com.smartclinic.model.Secretario;
 import br.com.smartclinic.model.Telefone;
@@ -91,6 +92,7 @@ public class SecretarioController implements Serializable {
 	}
 	
 	public String incluirMedico(){
+		FacesContext context = FacesContext.getCurrentInstance();
 		secretario.getPessoa().setEnderecos(enderecos);
 		secretario.getPessoa().setTelefones(telefones);
 		secretario.setUsuario(usuario);
@@ -98,8 +100,12 @@ public class SecretarioController implements Serializable {
 		try{
 			secretarioService.inserir(secretario, true);
 		}catch(RegraNegocioException e){
-			System.out.println(e.getMensagens());
+			for(String mensagem: e.getMensagens()){
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, mensagem, ""));
+			}
+			return "";
 		}
+		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Secretario incluido com sucesso!", ""));
 		return "";
 	}
 	

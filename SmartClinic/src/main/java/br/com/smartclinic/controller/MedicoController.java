@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 import org.primefaces.event.FlowEvent;
 
@@ -90,6 +92,7 @@ public class MedicoController implements Serializable {
 	}
 	
 	public String incluirMedico(){
+		FacesContext context = FacesContext.getCurrentInstance();
 		medico.getPessoa().setEnderecos(enderecos);
 		medico.getPessoa().setTelefones(telefones);
 		medico.setUsuario(usuario);
@@ -97,9 +100,13 @@ public class MedicoController implements Serializable {
 		try{
 			medicoService.inserir(medico, true);
 		}catch(RegraNegocioException e){
-			System.out.println(e.getMensagens());
+			for(String mensagem: e.getMensagens()){
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, mensagem, ""));
+			}
+			return "";
 		}
-		return "";
+		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Medico incluido com sucesso!", ""));
+		return "public/medicoListar.jsf";
 	}
 	
 	public void setTelefones(List<Telefone> telefones) {

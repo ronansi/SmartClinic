@@ -5,7 +5,7 @@ import java.util.Date;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 
 import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.DefaultScheduleModel;
@@ -19,13 +19,15 @@ import br.com.smartclinic.model.enums.SexoEnum;
 import br.com.smartclinic.model.enums.TipoUsuarioEnum;
 import br.com.smartclinic.service.MedicoService;
 
-@RequestScoped
+@SessionScoped
 @ManagedBean
 public class Main {
 
 	private MedicoService medicoService;
 	
 	private ScheduleModel agenda;
+	
+	private Medico medico;
 	
 	public ScheduleModel getAgenda() {
 		return agenda;
@@ -92,5 +94,13 @@ public class Main {
 	
 	public String getMessage(){
 		return "Hello World JSF!";
+	}
+
+	public Medico getMedico() {
+		return medico;
+	}
+
+	public void setMedico(Medico medico) {
+		this.medico = medico;
 	}
 }
