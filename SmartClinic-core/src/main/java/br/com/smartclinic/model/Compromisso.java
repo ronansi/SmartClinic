@@ -2,6 +2,7 @@ package br.com.smartclinic.model;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -45,7 +46,7 @@ public class Compromisso implements TransferEntity {
 	@Column(name = "tipo_compromisso", nullable = false)
 	private TipoCompromissoEnum tipo;
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_consulta", nullable = true)
 	private Consulta consulta;
 	

@@ -7,6 +7,7 @@ import java.util.List;
 import br.com.smartclinic.RegraNegocioException;
 import br.com.smartclinic.bo.MedicoBO;
 import br.com.smartclinic.bo.PessoaBO;
+import br.com.smartclinic.bo.UsuarioBO;
 import br.com.smartclinic.dao.MedicoDao;
 import br.com.smartclinic.model.Medico;
 import br.com.smartclinic.model.enums.TipoUsuarioEnum;
@@ -18,13 +19,13 @@ public class MedicoService implements Serializable{
 	private MedicoDao medicoDao;
 	private MedicoBO medicoBO;
 	private PessoaBO pessoaBO;
-	private UsuarioService usuarioService;
+	private UsuarioBO usuarioBO;
 	
 	private MedicoService(){
 		medicoDao = MedicoDao.getInstance();
-		usuarioService = UsuarioService.getInstance();
 		medicoBO = MedicoBO.getInstance();
 		pessoaBO = PessoaBO.getInstance();
+		usuarioBO = UsuarioBO.getInstance();
 	}
 	
 	public static MedicoService getInstance(){
@@ -43,7 +44,7 @@ public class MedicoService implements Serializable{
 		
 		try {
 			medico.getUsuario().setTipoUsuario(TipoUsuarioEnum.MEDICO);
-			usuarioService.inserir(medico.getUsuario(), false);
+			usuarioBO.validaRegrasNegocioInserir(medico.getUsuario());
 		} catch (RegraNegocioException e) {
 			mensagens.addAll(e.getMensagens());
 		}
@@ -55,12 +56,16 @@ public class MedicoService implements Serializable{
 		}
 		
 		try{
-			medico = medicoBO.inserir(medico, confirmaTransacao);
+			if(mensagens.isEmpty()){
+				medico = medicoBO.inserir(medico, confirmaTransacao);
+			}else{
+				medicoBO.validaRegrasNegocioMedicoInserir(medico);
+			}
 		}catch(RegraNegocioException e){
 			mensagens.addAll(e.getMensagens());
 		}
 		
-		if(mensagens.size() > 0){
+		if(!mensagens.isEmpty()){
 			throw new RegraNegocioException(mensagens);
 		}
 		

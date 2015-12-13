@@ -25,13 +25,16 @@ public class Medico implements TransferEntity {
 	@Column(name = "crm", nullable = false)
 	private String crm;
 	
-	@OneToOne(cascade = CascadeType.REMOVE)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_usuario", nullable = false)
 	private Usuario usuario;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_pessoa", nullable = false)
 	private Pessoa pessoa;
+	
+	@OneToOne(mappedBy = "medico")
+	private Agenda agenda;
 	
 	@Override
 	public Long getId() {
@@ -72,5 +75,13 @@ public class Medico implements TransferEntity {
 
 	public void setPessoa(Pessoa pessoa) {
 		this.pessoa = pessoa;
+	}
+
+	public Agenda getAgenda() {
+		return agenda;
+	}
+
+	public void setAgenda(Agenda agenda) {
+		this.agenda = agenda;
 	}
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import br.com.smartclinic.RegraNegocioException;
 import br.com.smartclinic.bo.SecretarioBO;
 import br.com.smartclinic.bo.PessoaBO;
+import br.com.smartclinic.bo.UsuarioBO;
 import br.com.smartclinic.dao.SecretarioDao;
 import br.com.smartclinic.model.Secretario;
 import br.com.smartclinic.model.enums.TipoUsuarioEnum;
@@ -18,13 +19,13 @@ public class SecretarioService implements Serializable{
 	private SecretarioDao secretarioDao;
 	private SecretarioBO secretarioBO;
 	private PessoaBO pessoaBO;
-	private UsuarioService usuarioService;
+	private UsuarioBO usuarioBO;
 	
 	private SecretarioService(){
 		secretarioDao = SecretarioDao.getInstance();
-		usuarioService = UsuarioService.getInstance();
 		secretarioBO = SecretarioBO.getInstance();
 		pessoaBO = PessoaBO.getInstance();
+		usuarioBO = UsuarioBO.getInstance();
 	}
 	
 	public static SecretarioService getInstance(){
@@ -43,7 +44,7 @@ public class SecretarioService implements Serializable{
 		
 		try {
 			secretario.getUsuario().setTipoUsuario(TipoUsuarioEnum.SECRETARIA);
-			usuarioService.inserir(secretario.getUsuario(), false);
+			usuarioBO.validaRegrasNegocioInserir(secretario.getUsuario());
 		} catch (RegraNegocioException e) {
 			mensagens.addAll(e.getMensagens());
 		}
@@ -54,15 +55,11 @@ public class SecretarioService implements Serializable{
 			mensagens.addAll(e.getMensagens());
 		}
 		
-		try{
-			secretario = secretarioBO.inserir(secretario, confirmaTransacao);
-		}catch(RegraNegocioException e){
-			mensagens.addAll(e.getMensagens());
-		}
-		
 		if(mensagens.size() > 0){
 			throw new RegraNegocioException(mensagens);
 		}
+		
+		secretario = secretarioBO.inserir(secretario, confirmaTransacao);
 		
 		return secretario;
 	}

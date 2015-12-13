@@ -20,7 +20,7 @@ public class Paciente implements TransferEntity{
 	@Column(name = "id_paciente")
 	private Long id;
 	
-	@OneToOne(cascade = CascadeType.REMOVE)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_pessoa", nullable = false)
 	private Pessoa pessoa;
 	
