@@ -54,6 +54,10 @@
 											&nbsp;
 											<h:commandButton styleClass="btn btn-warning btn-xs" value="Deletar">
 											</h:commandButton>
+											&nbsp;
+											<h:commandButton onclick="return confirm('Deseja agendar uma consulta?')" styleClass="btn btn-info btn-xs" value="Agendar Consulta" action="medicoAgenda">
+												<f:setPropertyActionListener target="#{main.medico}" value="#{medico}" />
+											</h:commandButton>
 										</div>
 									</h:form>
 								</h:column>
